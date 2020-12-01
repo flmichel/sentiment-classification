@@ -27,7 +27,7 @@ def main():
     for epoch in range(epochs):
         print("epoch {}".format(epoch))
         for ix, jy, n in zip(cooc.row, cooc.col, cooc.data):
-			logn = np.log(n)
+            logn = np.log(n)
             fn = min(1.0, (n / nmax) ** alpha)
             x, y = xs[ix, :], ys[jy, :]
             scale = 2 * eta * fn * (logn - np.dot(x, y))
