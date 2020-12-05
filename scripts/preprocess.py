@@ -307,16 +307,16 @@ def remove_stopwords_tweet(tweet):
 
 # Combine Pre-processing
 
-def preprocess(path):
-    transformed = []
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = transform_contractions_tweet(tweet)
-            aux = tag_del_tweet(aux)
-            aux = transform_hashtag_tweet(aux)
-            aux = remove_stopwords_tweet(aux)
-            aux = sentiment_emph_tweet(aux)
-            aux = transform_emoji_tweet(aux)
-            transformed.append(aux)
-    return transformed
+def transform_tweet(tweet):
+    tweet = transform_contractions_tweet(tweet)
+    tweet = tag_del_tweet(tweet)
+    tweet = transform_hashtag_tweet(tweet)
+    tweet = remove_stopwords_tweet(tweet)
+    #tweet = sentiment_emph_tweet(tweet)
+    tweet = transform_emoji_tweet(tweet)
+    return tweet
+
+def preprocess(df_tweets, out_path):
+    df_tweets['tweet'] = df_tweets['tweet'].apply(lambda tweet: transform_tweet(tweet))
+    df_tweets.to_csv(out_path, index=False)
+    return df_tweets
