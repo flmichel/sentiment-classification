@@ -7,10 +7,7 @@
 
 # In[1]:
 
-
-from data_handler import *
 from helper import *
-from tweetToVec import *
 import numpy as np
 import wordninja
 from nltk.corpus import stopwords
@@ -21,7 +18,7 @@ from nltk.corpus import stopwords
 # In[2]:
 
 
-path_to_tweet = 'data/twitter-datasets/'
+path_to_tweet = '../data/twitter-datasets/'
 pos_path = path_to_tweet + 'train_pos.txt'
 neg_path = path_to_tweet + 'train_neg_full.txt'
 test_path = path_to_tweet + 'test_data.txt'
@@ -264,7 +261,7 @@ def transform_hashtag(path):
                         w_aux = "<hashtag> " + ' '.join(wordninja.split(word))
                         aux = aux.replace(word, w_aux)
             transformed.append(aux)
-    return transformed    
+    return transformed
 
 
 # In[10]:
@@ -277,7 +274,7 @@ def transform_hashtag_tweet(tweet):
             if word[0] == '#':
                 w_aux = "<hashtag> " + ' '.join(wordninja.split(word))
                 aux = aux.replace(word, w_aux)
-    return aux    
+    return aux
 
 
 # In[97]:
@@ -480,7 +477,3 @@ preprocess(pos_path)
 
 
 # In[ ]:
-
-
-
-

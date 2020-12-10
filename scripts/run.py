@@ -1,4 +1,4 @@
-from preprocess import preprocess
+#from preprocess import preprocess
 from bert import *
 from data_processing import *
 from helper import *
@@ -36,7 +36,7 @@ model_name = 'model1'
 
 
 # if you want to train the model uncomment the code below. It might take a lot of time.
-
+'''
 pos_path = path_to_tweets + 'train_pos_full.txt'
 neg_path = path_to_tweets + 'train_neg_full.txt'
 test_path = path_to_tweets + 'test_data.txt'
@@ -69,8 +69,8 @@ optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, eps=EPSILON)
 scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=len(train)*TRAIN_EPOCHS)
 
 # train the model
-fit_model(model, train, validation, BATCH_LEN, TRAIN_EPOCHS, optimizer, scheduler, save=true, out_path=path_to_models+model_name)
-
+fit_model(model, train, validation, BATCH_LEN, TRAIN_EPOCHS, optimizer, scheduler, save=True, out_path=path_to_models+model_name)
+'''
 
 # ## Evalutae the test data and create submission
 
@@ -78,7 +78,7 @@ fit_model(model, train, validation, BATCH_LEN, TRAIN_EPOCHS, optimizer, schedule
 df_test = load_test(test_path)
 
 # Load the model
-df_test = BertForSequenceClassification.from_pretrained(path_to_models+model_name).to(device)
+model = BertForSequenceClassification.from_pretrained(path_to_models+model_name).to(device)
 # Preprocess the test data
 # out_pre_test = path_to_tweets + 'pre_test.csv'
 # df_test = preprocess(df_test, out_pre_test)

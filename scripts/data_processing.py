@@ -17,7 +17,6 @@ def bert_tokenize(tweets_df, out_csv_path, max_len):
     """
     Return a datafame with the token of each input tweet and his attention mask.
     """
-    print(max_len)
     tweets_df['input_ids'] = tweets_df['tweet'].apply(lambda tweet: torch.LongTensor(bert_tokenizer.encode(tweet))[:max_len])
     tweets_df['attention_mask'] = tweets_df.apply(lambda row: compute_bert_mask(row.input_ids), axis=1)
     return tweets_df
