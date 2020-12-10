@@ -11,7 +11,7 @@ def load_train(pos_path, neg_path, nrows):
     df_pos_tweets['label'] = 1
 
     df_neg_tweets = pd.read_table(neg_path, names=['tweet'], sep ="\n", header=None, nrows=nrows)
-    df_neg_tweets['label'] = -1
+    df_neg_tweets['label'] = 0
 
     df_tweets = pd.concat((df_pos_tweets, df_neg_tweets))
     return df_tweets
