@@ -11,12 +11,12 @@ from sklearn.model_selection import train_test_split
 
 # Set all parameters :
 SEED = 42
-NUM_TRAIN_TWEETS = 100
-BATCH_LEN = 10
+NUM_TRAIN_TWEETS = 200000
+BATCH_LEN = 40
 TRAIN_EPOCHS = 1
-TOKEN_LEN = 5  # the maximum is 512
-RATIO_TRAIN = 0.8
-LEARNING_RATE = 2e-5
+TOKEN_LEN = 60  # the maximum is 512
+RATIO_TRAIN = 0.98
+LEARNING_RATE = 1e-5
 EPSILON = 1e-8
 
 # Set all the seeds
@@ -36,7 +36,6 @@ model_name = 'model1'
 
 
 # if you want to train the model uncomment the code below. It might take a lot of time.
-'''
 pos_path = path_to_tweets + 'train_pos_full.txt'
 neg_path = path_to_tweets + 'train_neg_full.txt'
 test_path = path_to_tweets + 'test_data.txt'
@@ -70,7 +69,6 @@ scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_t
 
 # train the model
 fit_model(model, train, validation, BATCH_LEN, TRAIN_EPOCHS, optimizer, scheduler, save=True, out_path=path_to_models+model_name)
-'''
 
 # ## Evalutae the test data and create submission
 
