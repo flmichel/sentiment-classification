@@ -5,31 +5,22 @@
 
 # ## Imports
 
-# In[1]:
-
 
 from data_handler import *
 from helper import *
-#from tweetToVec import *
 import numpy as np
 import wordninja
 import nltk 
+import re
 nltk.download('stopwords')
 
 # ## Load Data
 
-# In[2]:
 
-
-#path_to_tweet = '../data/twitter-datasets/'
-#pos_path = path_to_tweet + 'train_pos.txt'
-#neg_path = path_to_tweet + 'train_neg_full.txt'
-#test_path = path_to_tweet + 'test_data.txt'
 
 
 # ## Transformation of contractions
 
-# In[3]:
 
 
 contractions = {
@@ -170,29 +161,6 @@ contractions = {
 }
 
 
-# In[4]:
-
-
-def transform_contractions(path):
-    transformed = []
-    keys = list(contractions.keys())
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = tweet
-            for word in tweet.split(' '):
-                if word in keys:
-                    #print("before: " + aux)
-                    #print("word: " + word + " new: " + contractions[word])
-                    aux = aux.replace(word, contractions[word])
-                    #print("after: " + aux)
-            transformed.append(aux)
-    return transformed
-
-
-# In[5]:
-
-
 def transform_contractions_tweet(tweet):
     aux = tweet
     keys = list(contractions.keys())
@@ -202,33 +170,8 @@ def transform_contractions_tweet(tweet):
     return aux
 
 
-# In[6]:
-
-
-#transform_contractions(pos_path)
-
 
 # ## Tag Deletion
-
-# In[7]:
-
-
-def tag_del(path):
-    transformed = []
-    max_occur = 100
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = tweet
-            if "<user>" in tweet:
-                aux = aux.replace("<user>", '', max_occur)
-            if "<url>" in tweet:
-                aux = aux.replace("<url>", '', max_occur)
-            transformed.append(aux)
-    return transformed
-
-
-# In[8]:
 
 
 def tag_del_tweet(tweet):
@@ -240,35 +183,7 @@ def tag_del_tweet(tweet):
         aux = aux.replace("<url>", '', max_occur)
     return aux
 
-
-# In[156]:
-
-
-#tag_del(pos_path)
-
-
 # ## Hashtag transformation
-
-# In[9]:
-
-
-def transform_hashtag(path):
-    transformed = []
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = tweet
-            for word in tweet.split(' '):
-                if len(word)>=1:
-                    if word[0] == '#':
-                        w_aux = "<hashtag> " + ' '.join(wordninja.split(word))
-                        aux = aux.replace(word, w_aux)
-            transformed.append(aux)
-    return transformed    
-
-
-# In[10]:
-
 
 def transform_hashtag_tweet(tweet):
     aux = tweet
@@ -280,44 +195,12 @@ def transform_hashtag_tweet(tweet):
     return aux    
 
 
-# In[97]:
-
-
-#transform_hashtag(pos_path)
-
-
 # ## Sentiment Emphasis
 
 # list of common positive/negative words:
 
-# In[42]:
-
-
-positive_words = list(set(open('/content/drive/MyDrive/ml-project2/data/positive-words.txt', encoding="ISO-8859-1").read().split()))
-negative_words = list(set(open('/content/drive/MyDrive/ml-project2/data/negative-words.txt', encoding="ISO-8859-1").read().split()))
-negations = ['not', 'no']
-
-
-# In[20]:
-
-
-def sentiment_emph(path):
-    transformed = []
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = tweet
-            if 'not' not in tweet:
-                for word in tweet.split(' '):
-                    if word in positive_words:
-                        aux = aux.replace(word, word + ' positive')
-                    elif word in negative_words:
-                        aux = aux.replace(word, word + ' negative')
-            transformed.append(aux)
-    return transformed
-
-
-# In[49]:
+positive_words = list(set(open('../data/positive-words-reduced-1000.txt', encoding="ISO-8859-1").read().split()))
+negative_words = list(set(open('../data/negative-words-reduced-1000.txt', encoding="ISO-8859-1").read().split()))
 
 
 def sentiment_emph_tweet(tweet):
@@ -332,19 +215,7 @@ def sentiment_emph_tweet(tweet):
     return aux
 
 
-# In[23]:
-
-
-#sentiment_emph(pos_path)
-
-
-# In[50]:
-
-
-
 # ## Emoji Transformation
-
-# In[72]:
 
 
 def space_emojis(emojis):
@@ -352,36 +223,9 @@ def space_emojis(emojis):
     extended = [' '.join(emoji) for emoji in emojis]
     return emojis + extended
 
-
-# In[73]:
-
-
-happy_emoji = [":)", ":-)", ":d", ";)", ":p", "=)", "=p", "=d", ";p", ";d", ":-d", ";-)", ":-p", "=-)", "=-d", ";-p", ";-d", "=]", "^-^", "(:", "^.^", ":D", "=D", "XD", "xD", "xd"]
+happy_emoji = [":)",":-)", ":o", ":d", ";)", ":p", "=)", "=p", "=d", ";p", ";d", ":-d", ";-)", ":-p", "=-)", "=-d", ";-p", ";-d", "=]", "^-^", "(:", "^.^", ":D", "=D", "XD", "xD", "xd"]
 love_emoji = ["<3", "x", "xx", "xo", "xoxo", ":*", "xxx", "xoxox"]
-sad_emoji = [":(", ":,(", ":'(", ":-(", ":,-(", ":'-(", ":c", ":C", "=(", "='(", "=[", "D=", "<\\3", "</3", ":/"]
-
-
-# In[74]:
-
-
-def transform_emoji(path):
-    transformed = []
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = tweet
-            for word in tweet.split(' '):
-                if word in happy_emoji:
-                    aux = aux.replace(word, 'happy')
-                elif word in love_emoji:
-                    aux = aux.replace(word, 'love')
-                elif word in sad_emoji:
-                    aux = aux.replace(word, 'sad')
-            transformed.append(aux)
-    return transformed
-
-
-# In[75]:
+sad_emoji = [":(",":,(", ":'(", ":-(", ":,-(", ":'-(", ":c", ":C", "=(", "='(", "=[", "D=", "<\\3", "</3", ":/"]
 
 
 def transform_emoji_tweet(tweet):
@@ -396,87 +240,45 @@ def transform_emoji_tweet(tweet):
     return aux
 
 
-# In[76]:
-
-
-#transform_emoji(pos_path)
-
-
 # ## Stopword removal
 
-# In[142]:
 
 
 stop_words = list(set(nltk.corpus.stopwords.words('english')))
 #stop_words.remove('not')
 
 
-# In[143]:
-
-
-
-
-# In[144]:
-
-
-def remove_stopwords(path):
-    transformed = []
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            aux = tweet
-            filtered_sentence = [w for w in aux.split() if not w in stop_words]
-            transformed.append(" ".join(filtered_sentence))
-    return transformed
-
-
-# In[159]:
-
-
 def remove_stopwords_tweet(tweet):
     filtered_sentence = [word for word in tweet.split() if not word in stop_words]
     return " ".join(filtered_sentence)
 
+# ## RT removal
 
-# In[120]:
+def remove_rt(tweet):
+  if 'rt' in tweet:
+    return tweet.replace('rt', '')
+  else:
+    return tweet
 
+# ## Reduce punctuation
 
-#remove_stopwords(pos_path)
-
+def reduce_punctuation(tweet):
+    for punct in '!?.':
+        tweet = re.sub('(\\'+punct+'\ *){2,}', punct + ' <repeat> ', tweet)
+    return tweet
 
 # # Combine Pre-processing
 
-# In[171]:
 
-'''
-def preprocess(path):
-    transformed = []
-    with open(path) as f:
-        all_lines = f.readlines()
-        for tweet in all_lines:
-            #print(tweet)
-            #aux = transform_contractions_tweet(tweet)
-            #print(aux)
-            #aux = tag_del_tweet(aux)
-            #print(aux)
-            #aux = transform_hashtag_tweet(aux)
-            #print(aux)
-            #aux = remove_stopwords_tweet(aux)
-            #print(aux)
-            #aux = transform_emoji_tweet(aux)
-            #print(aux)
-            #aux = sentiment_emph_tweet(aux)
-            #print(aux)
-            transformed.append(aux)
-    return transformed
-'''
 def transform_tweet(tweet):
-    tweet = transform_contractions_tweet(tweet)
-    tweet = tag_del_tweet(tweet)
+    tweet = remove_rt(tweet)
+    #tweet = tag_del_tweet(tweet)
     tweet = transform_hashtag_tweet(tweet)
     #tweet = remove_stopwords_tweet(tweet)
     tweet = transform_emoji_tweet(tweet)
-    #tweet = sentiment_emph_tweet(tweet)
+    tweet = sentiment_emph_tweet(tweet)
+    tweet = reduce_punctuation(tweet)
+    tweet = transform_contractions_tweet(tweet)
     return tweet
 
 def preprocess(df_tweets, out_path):
@@ -484,13 +286,6 @@ def preprocess(df_tweets, out_path):
     df_tweets.to_csv(out_path, index=False)
     return df_tweets
 
-# In[172]:
-
-
-#preprocess(pos_path)
-
-
-# In[ ]:
 
 
 
