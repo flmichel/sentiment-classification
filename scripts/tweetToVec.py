@@ -1,6 +1,6 @@
 import numpy as np
-glove = np.load('embeddings.npy')
-vocab = open("data/vocab_cut.txt", "r")
+glove = np.load('../embeddings.npy')
+vocab = open("../data/vocab_cut.txt", "r")
 
 words = vocab.readlines()
 dimention = len(glove[0])
