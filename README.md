@@ -1,56 +1,84 @@
-# Project Text Sentiment Classification
+# Project Text 2: Sentiment Classification
 
-The task of this competition is to predict if a tweet message used to contain a positive :) or negative :( smiley, by considering only the remaining text.
+This repository contains the code for the second project of EPFL's Machine Learning course.
 
-As a baseline, we here provide sample code using word embeddings to build a text classifier system.
+## Team Members
 
-Submission system environment setup:
+- Adrien LAYDU
+- Manon MICHEL
+- François MICHEL
 
-1. The dataset is available from the AIcrowd page, as linked in the PDF project description
+## Goal
 
- Download the provided datasets `twitter-datasets.zip`.
+The goal of the project is to predict as correctly as possible on a large dataset if tweet messages used to contain a positive `:)` or negative `:(` smiley, by considering only their remaining text.
 
-2. To submit your solution to the online evaluation system, we require you to prepare a “.csv” file of the same structure as sampleSubmission.csv (the order of the predictions does not matter, but make sure the tweet ids and predictions match). Your submission is evaluated according to the classification error (number of misclassified tweets) of your predictions.
+## Package requirements
 
-*Working with Twitter data:* We provide a large set of training tweets, one tweet per line. All tweets in the file train pos.txt (and the train pos full.txt counterpart) used to have positive smileys, those of train neg.txt used to have a negative smiley. Additionally, the file test data.txt contains 10’000 tweets without any labels, each line numbered by the tweet-id.
+To run our code you need to install the following packages:
 
-Your task is to predict the labels of these tweets, and upload the predictions to AIcrowd. Your submission file for the 10’000 tweets must be of the form `<tweet-id>`, `<prediction>`, see `sampleSubmission.csv`.
+- Numpy
 
-Note that all tweets have already been pre-processed so that all words (tokens) are separated by a single whitespace. Also, the smileys (labels) have been removed.
+  ```
+  pip install numpy
+  ```
 
-## Classification using Word-Vectors
+- Scikit-Learn
+  ```
+  pip install sklearn
+  ```
+- NLTK (The Natural Language Processing Toolkit)
+  ```
+  pip install nltk
+  ```
+- Wordninja
+  ```
+  pip install wordninja
+  ```
+- Pandas
+  ```
+  pip install pandas
+  ```
+- PyTorch
+  ```
+  pip install torch
+  ```
+- TQDM
+  ```
+  pip install tqdm
+  ```
+- The Transformers repository by Huggingface
+  ```
+  pip install git+https://github.com/huggingface/transformers.git
+  ```
+- Regularized logistic regression using GD or SGD.
+  ```
+  pip install numpy
+  ```
 
-For building a good text classifier, it is crucial to find a good feature representation of the input text. Here we will start by using the word vectors (word embeddings) of each word in the given tweet. For simplicity of a first baseline, we will construct the feature representation of the entire text by simply averaging the word vectors.
+## Reproducing this Project
 
-Below is a solution pipeline with an evaluation step:
+To run our Machine Learning algorithm with the best parameters we found:
 
-### Generating Word Embeddings: 
+- Clone this project
+- Download the file `twitter-datasets.zip` on AIcrowd containing the datasets
+- Unzip it
+- Put it in a folder called `/data` inside the repository
+- Download all the packages required
+- Run the run.py file with the following command:
+  ```
+  python3 run.py
+  ```
 
-Load the training tweets given in `pos_train.txt`, `neg_train.txt` (or a suitable subset depending on RAM requirements), and construct a a vocabulary list of words appearing at least 5 times. This is done running the following commands. Note that the provided `cooc.py` script can take a few minutes to run, and displays the number of tweets processed.
+## Files description
 
-```bash
-build_vocab.sh
-cut_vocab.sh
-python3 pickle_vocab.py
-python3 cooc.py
-```
+Each file can be found in the folder `scripts/`:
 
-
-Now given the co-occurrence matrix and the vocabulary, it is not hard to train GloVe word embeddings, that is to compute an embedding vector for wach word in the vocabulary. We suggest to implement SGD updates to train the matrix factorization, as in
-
-```glove_solution.py```
-
-Once you tested your system on the small set of 10% of all tweets, we suggest you run on the full datasets `pos_train_full.txt`, `neg_train_full.txt`
-
-### Building a Text Classifier:
-
-1. Construct Features for the Training Texts: Load the training tweets and the built GloVe word embeddings. Using the word embeddings, construct a feature representation of each training tweet (by averaging the word vectors over all words of the tweet).
-
-2. Train a Linear Classifier: Train a linear classifier (e.g. logistic regression or SVM) on your constructed features, using the scikit learn library, or your own code from the earlier labs. Recall that the labels indicate if a tweet used to contain a :) or :( smiley.
-
-3. Prediction: Predict labels for all tweets in the test set.
-
-4. Submission / Evaluation: Submit your predictions to AIcrowd, and verify the obtained misclassification error score. (You can also use a local separate validation set to get faster feedback on the accuracy of your system). Try to tune your system for best evaluation score.
-
-## Extensions:
-Naturally, there are many ways to improve your solution, both in terms of accuracy and computation speed. More advanced techniques can be found in the recent literature.
+- `run.py` contains the code to get a prediction of the sentiments on the test dataset.
+- `helper.py` contains functions to import the datasets.
+- `preprocess.py` contains functions to preprocess tweets.
+- `bert.py` contains functions to train the BERT model and evaluate the accuracy of the model.
+- `tweetToVec` contains the function to convert the tweets into vectors using GloVe.
+- `data_handler.py` contains the function to split the datas into a training and a validation set.
+- `data_processing.py` contains functions to tokenize the tweets using the BERT technique.
+- `bert_collab.ipynb` is a notebook used to train the BERT model using Google Colab.
+- `Simple_models.ipynb` is a notebook containing all others the models (excluding BERT) we used to perform the sentiments analysis.
