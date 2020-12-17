@@ -1,5 +1,5 @@
 import numpy as np
-glove = np.load('../embeddings.npy')
+glove = np.load('../glove/embeddings.npy')
 vocab = open("../data/vocab_cut.txt", "r")
 
 words = vocab.readlines()
